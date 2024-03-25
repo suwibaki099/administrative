@@ -11,9 +11,9 @@
 @endsection
 
 @section('breadcrumb-title')
-<!-- {{ date_default_timezone_set('Asia/Manila') }} -->
-<!-- {{ $current_time = time() }} -->
-<!-- {{ date('Y-m-d H:i:s', $current_time ) }} -->
+ {{-- {{ date_default_timezone_set('Asia/Manila') }} --}}
+ {{-- {{ $current_time = time() }} --}}
+ {{-- {{ date('g:i a', $current_time) }} --}}
 <h3>Dashboard </h3>
 @endsection
 

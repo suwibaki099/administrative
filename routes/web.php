@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\files_request;
 use Illuminate\Support\Facades\Route;
-use illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,25 +14,19 @@ use illuminate\Http\Request;
 |
 */
 
+// home page
 Route::get('/', function () {
     return redirect()->route('index');
 })->name('/');
-
-Route::get('/api', function (Request $request) {
-    return response()->json([
-        "department" => $_GET['department'],
-        "name" => $_GET['name'],
-        "timestamp" => time(),
-        "document_name" => $_GET['document_name']
-    ]);
-})->name('/api');
 
 Route::view('index', 'index')->name('index');
 
-Route::get('/', function () {
-    return redirect()->route('index');
-})->name('/');
+// document management
+Route::get('/document-management', function() {
+    return view('document', [
+        'files' => files_request::all()
+    ]);
+});
 
-Route::view('document', 'document')->name('document');
 Route::view('legalcontract', 'legalcontract')->name('legalcontract');
 Route::view('reports', 'reports')->name('reports');

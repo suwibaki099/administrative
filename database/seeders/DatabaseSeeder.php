@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\files_request;
+use DateTime;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,5 +22,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        files_request::factory(5)->create();
+
+        // files_request::create([
+        //     'extension' => 'pdf',
+        //     'name' => 'wdaawd.pdf',
+        //     'size' => '1.0 mb',
+        //     'relative_time' => time(),
+        // ]);
     }
 }

@@ -11,7 +11,10 @@
 @endsection
 
 @section('breadcrumb-title')
-<h3>My Document</h3>
+@php
+    $extension = ['pdf', 'docx', 'txt', 'xls'];
+@endphp
+<h3>My Document {{ $extension[random_int(0, 3)] }}</h3>
 @endsection
 
 @section('breadcrumb-items')
@@ -73,12 +76,12 @@
             <h6 class="mt-4">Folders</h6>
             <ul class="folder">
               <li class="folder-box">
-                <div class="media">
+                <div class="media ">
                   <i class="fa fa-folder f-36 txt-warning"></i>
-                  <a href="#" class="media-body ms-3 sidebar-title">
-                    <h6 class="mb-0">Project Managament</h6>
-                    <p>0 files</p>
-                  </a>
+                    <div class="media-body ms-3 sidebar-title">
+                      <h6 class="mb-0">Project Managament</h6>
+                      <p>0 files</p>
+                    </div>
                 </div>
               </li>
               <li class="folder-box">
@@ -93,38 +96,37 @@
             </ul>
             <h6 class="mt-4">Files</h6>
             <ul class="files">
+
+              @unless(count($files) == 0)
+
+              @foreach ($files as $file)
               <li class="file-box">
-                <div class="file-top"> <i class="fa fa-file-archive-o txt-secondary"></i><i class="fa fa-ellipsis-v f-14 ellips"></i></div>
+                <div class="file-top"> 
+                  <a href="{{ asset('assets/pdf/sample.pdf') }}" target="_blank">
+                      @if($file['extension'] == 'pdf')
+                          <i class="fa fa-file-pdf-o txt-secondary"></i>
+                      @elseif($file['extension'] == 'doc' || $file['extension'] == 'docx')
+                          <i class="fa fa-file-word-o txt-info"></i>
+                      @elseif($file['extension'] == 'xls' || $file['extension'] == 'xlsx')
+                          <i class="fa fa-file-excel-o txt-success"></i>
+                      {{-- Add more conditions for other file types --}}
+                      @else
+                          <i class="fa fa-file-text-o txt-primary"></i> {{-- Default icon for unknown file types --}}
+                      @endif
+                  </a>
+                  <i class="fa fa-ellipsis-v f-14 ellips"></i></div>
                 <div class="file-bottom">
-                  <h6>Project.zip </h6>
-                  <p class="mb-1">1.90 GB</p>
-                  <p> <b>last open : </b>1 hour ago</p>
+                  <h6>{{ $file['name'] }}</h6>
+                  <p class="mb-1">{{ $file['size'] }}</p>
+                  <p> <b>last open : </b>{{ $file['relative_time'] }}</p>
                 </div>
               </li>
-              <li class="file-box">
-                <div class="file-top"> <i class="fa fa-file-excel-o txt-success"></i><i class="fa fa-ellipsis-v f-14 ellips"></i></div>
-                <div class="file-bottom">
-                  <h6>Backend.xls</h6>
-                  <p class="mb-1">2.00 GB</p>
-                  <p> <b>last open : </b>1 hour ago</p>
-                </div>
-              </li>
-              <li class="file-box">
-                <div class="file-top"> <i class="fa fa-file-text-o txt-info"></i><i class="fa fa-ellipsis-v f-14 ellips"></i></div>
-                <div class="file-bottom">
-                  <h6>requirements.txt </h6>
-                  <p class="mb-1">0.90 KB</p>
-                  <p> <b>last open : </b>1 hour ago</p>
-                </div>
-              </li>
-              <li class="file-box">
-                <div class="file-top"> <i class="fa fa-file-text-o txt-primary"></i><i class="fa fa-ellipsis-v f-14 ellips"></i></div>
-                <div class="file-bottom">
-                  <h6>Logo.psd </h6>
-                  <p class="mb-1">2.0 MB</p>
-                  <p> <b>last open : </b>1 hour ago</p>
-                </div>
-              </li>
+              @endforeach
+
+              @else 
+              <h5>No files</h5>
+              @endunless
+
             </ul>
           </div>
         </div>

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('api_request', function (Blueprint $table) {
+        Schema::create('files_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('department');
+            $table->string('extension');
             $table->string('name');
-            $table->string('document_name');
+            $table->string('size');
+            $table->string('relative_time');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('api_request');
+        Schema::dropIfExists('files_requests');
     }
 };
