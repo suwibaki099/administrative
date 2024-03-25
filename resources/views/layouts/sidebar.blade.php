@@ -12,14 +12,28 @@
           <li class="back-btn">
             <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
           </li>
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="{{ route('index')}}">
+
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Home</h6>
+            </div>
+          </li>
+
+          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{{ route('index')}}">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
               </svg>
               <svg class="fill-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-home') }}"></use>
               </svg><span>Dashboard</span></a></li>
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="{{ route('document')}}">
+
+          <li class="sidebar-main-title">
+            <div>
+              <h6 class="lan-8">Applications</h6>
+            </div>
+          </li>
+
+          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{{ route('document')}}">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-social') }}"></use>
               </svg>

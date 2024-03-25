@@ -1,7 +1,6 @@
-
- <!-- latest jquery-->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
- <!-- Bootstrap js-->
+<!-- latest jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- Bootstrap js-->
 <script src="{{asset('assets/js/bootstrap/bootstrap.bundle.min.js')}}"></script>
 <!-- feather icon js-->
 <script src="{{asset('assets/js/icons/feather-icon/feather.min.js')}}"></script>
@@ -21,10 +20,12 @@
 <script src="{{ asset('assets/js/slick/slick.min.js') }}"></script>
 <script src="{{ asset('assets/js/slick/slick.js') }}"></script>
 <script src="{{ asset('assets/js/header-slick.js') }}"></script>
+<!-- timer -->
+<script src="{{ asset('assets/js/timer.js') }}"></script>
 @yield('script')
 
-@if(Route::current()->getName() != 'popover') 
-	<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
+@if(Route::current()->getName() != 'popover')
+<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 @endif
 
 <!-- Plugins JS Ends-->
