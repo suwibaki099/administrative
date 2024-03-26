@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        files_request::factory(5)->create();
+        files_request::factory(4)->create();
 
         // files_request::create([
         //     'extension' => 'pdf',

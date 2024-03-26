@@ -1,10 +1,10 @@
 <div class="sidebar-wrapper" sidebar-layout="stroke-svg">
   <div>
-    <div class="logo-wrapper"><a href="{{ route('/')}}"><img class="img-fluid for-light" style="height: 40px; width: auto;" src="{{ asset('assets/images/logo/rkive.png') }}" alt=""><img class="img-fluid for-dark" src="{{ asset('assets/images/logo/logo_dark.png') }}" alt=""></a>
+    <div class="logo-wrapper"><a href="/"><img class="img-fluid for-light" style="height: 40px; width: auto;" src="{{ asset('assets/images/logo/rkive.png') }}" alt=""><img class="img-fluid for-dark" src="{{ asset('assets/images/logo/logo_dark.png') }}" alt=""></a>
       <div class="back-btn"><i class="fa fa-angle-left"></i></div>
       <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
     </div>
-    <div class="logo-icon-wrapper"><a href="{{ route('/')}}"><img class="img-fluid" style="height: 20px; width: auto;" src="{{ asset('assets/images/logo/logo1.png') }}" alt=""></a></div>
+    <div class="logo-icon-wrapper"><a href="/"><img class="img-fluid" style="height: 20px; width: auto;" src="{{ asset('assets/images/logo/logo1.png') }}" alt=""></a></div>
     <nav class="sidebar-main">
       <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
       <div id="sidebar-menu">
@@ -19,7 +19,7 @@
             </div>
           </li>
 
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{{ route('index')}}">
+          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="/">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-home') }}"></use>
               </svg>
@@ -33,7 +33,7 @@
             </div>
           </li>
 
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{{ route('document')}}">
+          <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="/document-management">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-social') }}"></use>
               </svg>

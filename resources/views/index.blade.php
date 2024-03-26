@@ -79,7 +79,7 @@
 									</div>
 								</div>
 								<div>
-									<h4>10,000</h4><span class="f-light">Total Documents</span>
+									<h4>{{ $documents }}</h4><span class="f-light">Total Documents</span>
 								</div>
 							</div>
 							<div class="font-secondary f-w-500"><i class="icon-arrow-up icon-rotate me-1"></i><span>+50%</span></div>

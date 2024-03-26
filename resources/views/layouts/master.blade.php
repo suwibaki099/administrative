@@ -10,7 +10,7 @@
   <meta name="author" content="pixelstrap">
   <link rel="icon" href="/assets/images/logo1.png" type="image/x-icon">
   <link rel="shortcut icon" href="{{ asset('assets/images/logo/logo1.png') }}" type="image/x-icon">
-  <title>Rkive</title>
+  <title> @yield('title') - Rkive</title>
 
   <!-- Google font-->
   <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
