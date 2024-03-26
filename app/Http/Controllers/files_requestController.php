@@ -43,4 +43,14 @@ class files_requestController extends Controller
             abort('404');
         }
     }
+
+    // show contract table
+    public function show_contract() {
+        return view('legalcontract');
+    }
+
+    // show document table
+    public function document_table(){
+        return view('document-request');
+    }
 }

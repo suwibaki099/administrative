@@ -11,10 +11,6 @@
 @endsection
 
 @section('breadcrumb-title')
-@php
-    // $extension = ['pdf', 'docx', 'txt', 'xls'];
-    // {{ $extension[random_int(0, 3)] }}
-@endphp
 <h3>My Document </h3>
 @endsection
 

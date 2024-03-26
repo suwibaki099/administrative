@@ -35,18 +35,23 @@
 
           <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="/document-management">
               <svg class="stroke-icon">
-                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-social') }}"></use>
+                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-file') }}"></use>
               </svg>
               <svg class="fill-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-social') }}"></use>
               </svg><span>Document Management</span></a></li>
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="{{ route('legalcontract')}}">
+          <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="javascript:void(0)">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-form') }}"></use>
               </svg>
               <svg class="fill-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#fill-form') }}"></use>
-              </svg><span>Legal Contract </span></a></li>
+              </svg><span>Legal Management</span></a>
+              <ul class="sidebar-submenu">
+                <li><a href="/legal-contract">Contract Request</a></li>
+                <li><a href="/document-request">Document Request</a></li>
+            </ul>
+            </li>
           <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="{{ route('Reports')}}">
               <svg class="stroke-icon">
                 <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-form') }}"></use>
