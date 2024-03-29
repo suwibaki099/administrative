@@ -100,7 +100,7 @@
 										</div>
 									</div>
 									<div>
-										<h4>4,200</h4><span class="f-light">Total Contracts</span>
+										<h4>{{$contract}}</h4><span class="f-light">Total Contracts</span>
 									</div>
 								</div>
 								<div class="font-primary f-w-500"><i class="icon-arrow-up icon-rotate me-1"></i><span>+70%</span></div>

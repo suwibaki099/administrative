@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('files_requests', function (Blueprint $table) {
             $table->id();
             $table->string('department');
+            $table->string('file')->nullable();
             $table->string('extension');
             $table->string('name');
             $table->string('size');

@@ -44,6 +44,14 @@
         }
     }
 
+    function formatBytes($size, $precision = 2)
+    {
+        $base = log($size, 1024);
+        $suffixes = array('b', 'Kb', 'Mb', 'Gb', 'Tb');   
+
+        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    }
+
     // get the department name
     foreach ($files as $file) {
         $department = $file->department;
@@ -77,6 +85,25 @@
 
 @section('content')
 <div class="container-fluid">
+  <style>
+    .remove {
+      background: none;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .dropdown-menu {
+      background-color: rgb(179, 170, 162);
+    }
+
+    .hov {
+      font-size: 20px;
+    }
+    .hov:hover {
+      color: #ff7569;
+    }
+  </style>
     <div class="row">
       <div class="col-xl-3 box-col-6 pe-0">
         <div class="file-sidebar">
@@ -99,11 +126,6 @@
           <div class="card min-vh-100">
             <div class="card-header">
               <div class="media">
-                <form class="form-inline" action="/files/" method="get">
-                  <div class="form-group mb-0"> <i class="fa fa-search"></i>
-                    <input class="form-control-plaintext" name="search2" type="text" placeholder="Search...">
-                  </div>
-                </form>
                 <div class="media-body text-end">
                   <button class="btn btn-outline-primary" type="submit" data-bs-toggle="modal" data-bs-target="#tooltipmodal"><i data-feather="upload"></i>Upload</button>
                 </div>
@@ -117,9 +139,9 @@
                 @unless(count($files) == 0)
   
                 @foreach ($files as $file)
-                <li class="file-box">
+                <li class="file-box index">
                   <div class="file-top"> 
-                    <a href="{{ asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
+                    <a href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
                         @if($file->extension == 'pdf')
                             <i class="fa fa-file-pdf-o txt-secondary"></i>
                         @elseif($file->extension == 'doc' || $file->extension == 'docx')
@@ -131,10 +153,15 @@
                             <i class="fa fa-file-text-o txt-primary"></i> {{-- Default icon for unknown file types --}}
                         @endif
                     </a>
-                    <i class="fa fa-ellipsis-v f-14 ellips"></i></div>
+                         <button class="fa fa-ellipsis-v f-14 ellips btn-round remove" data-bs-toggle="dropdown" type="button"></button>
+                         <ul class="dropdown-menu">
+                          <li><a class="dropdown-item color" href="#"><i class="fa fa-send-o (alias) hov"></i></a></li>
+                          <li><a class="dropdown-item" href="#"><i class="fa fa-file-archive-o hov"></i></a></li>
+                        </ul>
+                    </div>
                   <div class="file-bottom">
                     <h6>{{ $file->name }}</h6>
-                    <p class="mb-1"><b>size : </b>{{ $file->size }}</p>
+                    <p class="mb-1"><b>size : </b>{{ formatBytes($file->size) }}</p>
                     <p> <b>department : </b>{{ $file->department }}</p>
                     <p> <b>last open : </b>{{ time2str($file->relative_time) }}</p>
                   </div>
@@ -146,6 +173,46 @@
                 @endunless
                 {{-- end of display the files with information --}}
               </ul>
+              {{-- modal --}}
+            <div class="modal fade" id="tooltipmodal" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Upload File</h5>
+                      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Form for file upload -->
+                      <form class="d-inline-flex" id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <!-- Input for file selection -->
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="mb-2">
+                                  <label for="first_name" class="col-form-label text-md-right">Department</label>
+                                  <select class="form-select form-control-info-fill" name="department" >
+                                    <option value="Administrative" selected>{{$department}}</option>
+                                  </select>
+                              </div>
+                              @error('department')
+                                  <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+                              @enderror
+                          </div>
+                          <div class="col-12">
+                            <div class="mb-2">
+                                <label for="first_name" class="col-form-label text-md-right">File</label>
+                                <input type="file" id="first_name" name="file" class="form-control" required="">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm"><i data-feather="upload"></i> Upload</button>
+                          </div>
+                          <!-- Button to submit the form -->
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {{-- end of modal --}}
             </div>
           </div>
         </div>

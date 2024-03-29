@@ -43,6 +43,14 @@
             return date('F Y', $ts);
         }
     }
+
+    function formatBytes($size, $precision = 2)
+    {
+        $base = log($size, 1024);
+        $suffixes = array('b', 'Kb', 'Mb', 'Gb', 'Tb');   
+
+        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    }
 @endphp
 
 @extends('layouts.master')
@@ -70,7 +78,41 @@
 
 @section('content')
 <div class="container-fluid">
+  <style>
+    .remove {
+      background: none;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .dropdown-menu {
+    }
+    .dropdown-item {
+      width: 40px;
+    }
+
+    .hov {
+      font-size: 20px;
+    }
+    .hov:hover {
+      color: #ff7569;
+    }
+  </style>
   <div class="row">
+        {{-- alerts --}}
+            @if (session()->has('success'))
+            <div x-data="{show: true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="fixed top-0 left-1/2 transform -translate-x-1/2 alert alert-success dark alert-dismissible fade show" role="alert"><strong>Great ! </strong> {{session('success')}}
+                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
+            @if (session()->has('error'))
+            <div x-data="{show: true}" x-init="setTimeout(() => show = false, 5000)" x-show="show" class="fixed top-0 left-1/2 transform -translate-x-1/2 alert alert-danger dark alert-dismissible fade show" role="alert"><strong>Error !...</strong> {{session('error')}}
+                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+        {{--  end of alerts --}}
     <div class="col-xl-3 box-col-6 pe-0">
       <div class="file-sidebar">
         <div class="card">
@@ -142,9 +184,9 @@
               @unless(count($files) == 0)
 
               @foreach ($files as $file)
-              <li class="file-box">
+              <li class="file-box index">
                 <div class="file-top"> 
-                  <a href="{{ asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
+                  <a href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
                       @if($file->extension == 'pdf')
                           <i class="fa fa-file-pdf-o txt-secondary"></i>
                       @elseif($file->extension == 'doc' || $file->extension == 'docx')
@@ -156,10 +198,15 @@
                           <i class="fa fa-file-text-o txt-primary"></i> {{-- Default icon for unknown file types --}}
                       @endif
                   </a>
-                  <i class="fa fa-ellipsis-v f-14 ellips"></i></div>
+                       <button class="fa fa-ellipsis-v f-14 ellips btn-round remove" data-bs-toggle="dropdown" type="button"></button>
+                       <ul class="dropdown-menu">
+                        <li><a class="dropdown-item color" href="/test"><i class="fa fa-send-o (alias) hov"></i></a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fa fa-file-archive-o hov"></i></a></li>
+                      </ul>
+                  </div>
                 <div class="file-bottom">
                   <h6>{{ $file->name }}</h6>
-                  <p class="mb-1"><b>size : </b>{{ $file->size }}</p>
+                  <p class="mb-1"><b>size : </b>{{ formatBytes($file->size) }}</p>
                   <p> <b>department : </b>{{ $file->department }}</p>
                   <p> <b>last open : </b>{{ time2str($file->relative_time) }}</p>
                 </div>
@@ -171,6 +218,47 @@
               @endunless
               {{-- end of display the files with information --}}
             </ul>
+            {{-- modal --}}
+            <div class="modal fade" id="tooltipmodal" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Upload File</h5>
+                      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <!-- Form for file upload -->
+                      <form class="d-inline-flex" id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          <!-- Input for file selection -->
+                          <div class="row">
+                            <div class="col-12">
+                              <div class="mb-2">
+                                  <label for="first_name" class="col-form-label text-md-right">Department</label>
+                                  <select class="form-select form-control-info-fill" name="department">
+                                    <option value="None">Select...</option>
+                                    <option value="Administrative">Administrative</option>
+                                  </select>
+                              </div>
+                              @error('department')
+                                  <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+                              @enderror
+                          </div>
+                          <div class="col-12">
+                            <div class="mb-2">
+                                <label for="first_name" class="col-form-label text-md-right">File</label>
+                                <input type="file" id="first_name" name="file" class="form-control" required="">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm"><i data-feather="upload"></i> Upload</button>
+                          </div>
+                          <!-- Button to submit the form -->
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {{-- end of modal --}}
           </div>
         </div>
       </div>
@@ -180,10 +268,12 @@
 </div>
 </div>
 </div>
-
-
-
 @endsection
 
 @section('script')
+<script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
+<script src="{{ asset('assets/js/notify/index.js') }}"></script>
+<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
+<script src="{{asset('assets/js/icons/icons-notify.js')}}"></script>
+<script src="{{asset('assets/js/icons/icon-clipart.js')}}"></script>
 @endsection

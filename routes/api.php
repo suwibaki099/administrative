@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/document_request', function (Request $request_document) {
+Route::get('/docu_request', function (Request $request_document) {
     return response()->json([
         "department" => $request_document->department,
         "name" => $request_document->name,

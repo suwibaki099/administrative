@@ -32,6 +32,9 @@ Route::get('/', [files_requestController::class, 'index']);
 // document management
 Route::get('/document-management', [files_requestController::class, 'document']);
 
+// upload file
+Route::post('/upload', [files_requestController::class, 'uploadFile']);
+
 // files management for every department.
 Route::get('/files/{department}', [files_requestController::class, 'show']);
 Route::get('/files/{department}', [files_requestController::class, 'show']);
@@ -45,8 +48,10 @@ Route::post('/contract', [files_requestController::class, 'store']);
 // document request management
 Route::get('/document-request', [files_requestController::class, 'document_table']);
 
-// download the document
+// download the document from public
 Route::get('/assets/{id}/{file_name}', [files_requestController::class, 'downloadFile']);
+// download the document from public storage
+Route::get('/upload/{file_name}', [files_requestController::class, 'storageDownloadFile']);
 
 // test
 Route::get('/test', [files_requestController::class, 'test']);

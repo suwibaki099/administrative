@@ -11,7 +11,7 @@ class files_request extends Model
 
     protected $fillable = [
         'department', 'extension', 'name', 'size',
-        'relative_time'
+        'relative_time', 'file'
     ];
 
     public function scopeFilter($query, array $filters)

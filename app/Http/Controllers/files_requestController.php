@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\files_request;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\Redirect;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class files_requestController extends Controller
@@ -15,15 +16,12 @@ class files_requestController extends Controller
     // show the reports
     public function index()
     {
-        $files = files_request::all();
-        $documents_count = 0;
-
-        foreach ($files as $file) {
-            $documents_count++;
-        }
+        $document_counts = files_request::all()->count();
+        $contract_counts = contract::all()->count();
 
         return view('index', [
-            'documents' => $documents_count
+            'documents' => $document_counts,
+            'contract' => $contract_counts
         ]);
     }
 
@@ -111,7 +109,7 @@ class files_requestController extends Controller
                 'department' => 'Administrative',
                 'extension' => 'docx',
                 'name' => $request->header . '.docx',
-                'size' => 'Unknown',
+                'size' => 21234,
                 'relative_time' => time()
             ]
         );
@@ -119,48 +117,50 @@ class files_requestController extends Controller
         return redirect('/legal-contract')->with('success', 'Contract  has been created!');
     }
 
-    // download the file
+    // upload file
+    public  function uploadFile(Request $request)
+    {
+        if ($request->hasFile('file') && $request->department != 'None') {
+
+            files_request::create(
+                [
+                    'department' =>  $request->department,
+                    'file' => $request->file('file')->store('upload', 'public'),
+                    'extension' => $request->file('file')->getClientOriginalExtension(),
+                    'name' => $request->file('file')->getClientOriginalName(),
+                    'size' => $request->file('file')->getSize(),
+                    'relative_time' => time()
+                ]
+            );
+            return redirect('/document-management')->with('success', 'Contract  has been created!');
+        }
+
+        return redirect('/document-management')->with('error', 'field is empty or department selected is None!');
+    }
+
+    // download the file or open from public storage
+    public function storageDownloadFile($file_name)
+    {
+        $file = files_request::where('file', 'upload/' . $file_name)->first();
+        $file->relative_time = time();
+        $file->save();
+
+        return redirect('/storage/upload/' . $file_name);
+    }
+
+    // download the file or open it from public.
     public function downloadFile($id, $file_name)
     {
-        // files_request::create(
-        //     [
+        $file = files_request::where('id', $id)->first();
+        $file->relative_time = time();
+        $file->save();
 
-        //     ]
-        // );
-        return 'test ' . $id . ' test ' . $file_name;
+        return redirect('/assets/contract/' . $file_name);
     }
 
     // test
     public function test()
     {
-        // $phpWord = new PhpWord();
-        // New section
-        // $section = $phpWord->addSection();
-
-        // $textrun = $section->addTextRun();
-        // $textrun->addImage(asset('assets/images/user.jpg'));
-
-        // $section->addText(
-        //     '"Learn from yesterday, live for today, hope for tomorrow. '
-        //         . 'The important thing is not to stop questioning." '
-        //         . '(Albert Einstein)'
-        // );
-
-
-        $templateProcessor = new TemplateProcessor(asset('assets/contract-template/COE-Sample.docx'));
-        $templateProcessor->setValue('title', 'Example');
-        $templateProcessor->setValue('day', '28');
-        $templateProcessor->setValue('month', '03');
-        $templateProcessor->setValue('year', '2024');
-        $templateProcessor->setValue('content', 'niorererererrrrrrrrrrrrrrrrrrrrrrrr');
-        $templateProcessor->setValue('employer', 'jandy erick gulpe');
-        $templateProcessor->setValue('employee', 'mark angelo gulpe');
-        $templateProcessor->saveAs('assets/contract-template/test.docx');
-        // $templateProcessor->saveAs(asset('storage\testfile.docx'));
-
-        // $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        // $objWriter->save(storage_path('app/public'));
-        // $objWriter->save('test.docx');
 
         return 'done!';
     }
