@@ -8,6 +8,7 @@
 @section('style')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/datatables.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/datatable-extension.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/dropzone.css')}}">
 @endsection
 
 @section('breadcrumb-title')
@@ -16,7 +17,7 @@
 
 @section('breadcrumb-items')
 <li class="breadcrumb-item">Dashboard</li>
-<li class="breadcrumb-item"><a href="/document-management">Document Request</a></li>
+<li class="breadcrumb-item"><a href="javascript:void();">Document Request</a></li>
 @endsection
 
 @section('breadcrumb-title')
@@ -26,6 +27,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="card">
+				<button class="btn btn-primary" type="submit" data-bs-toggle="modal" data-bs-target="#tooltipmodal">Create Contract</button>
 				<div class="card-body">
 						<table class="display" id="export-button">
 							<thead>
@@ -88,6 +90,36 @@
 		</div>
 	</div>
 </div>
+{{-- modal --}}
+<div class="modal fade" id="tooltipmodal" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+	   <div class="modal-content">
+		  <div class="modal-header">
+			 <h5 class="modal-title">Upload File</h5>
+			 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+		  </div>
+		  <div class="modal-body">
+			<div class="col-sm-12">
+				<div class="card">
+					<div class="card-header">
+						<h5>Single File Upload</h5>
+					</div>
+					<div class="card-body">
+						<form class="dropzone digits" id="singleFileUpload" action="/upload.php">
+							<div class="dz-message needsclick">
+								<i class="icon-cloud-up"></i>
+								<h6>Drop files here or click to upload.</h6>
+								<span class="note needsclick">(This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.)</span>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	   </div>
+	</div>
+ </div>
+ {{-- end modal --}}
 @endsection
 
 @section('script')

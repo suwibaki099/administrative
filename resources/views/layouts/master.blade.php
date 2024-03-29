@@ -15,14 +15,15 @@
   <!-- Google font-->
   <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&display=swap" rel="stylesheet">
-
+  <script src="//unpkg.com/alpinejs" defer></script>
+  
   @include('layouts.css')
   @yield('style')
 
 </head>
 
 <body @if(Route::current()->getName() == 'index') onload="startTime()" @endif>
-
+  
   <!-- loader starts-->
   <div class="loader-wrapper">
     <div class="loader-index"><span></span></div>

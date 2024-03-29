@@ -33,13 +33,20 @@ Route::get('/', [files_requestController::class, 'index']);
 Route::get('/document-management', [files_requestController::class, 'document']);
 
 // files management for every department.
-Route::get('/document-management/{department}', [files_requestController::class, 'show']);
+Route::get('/files/{department}', [files_requestController::class, 'show']);
+Route::get('/files/{department}', [files_requestController::class, 'show']);
 
 // contract management
 Route::get('/legal-contract', [files_requestController::class, 'show_contract']);
 
+// Create contract and store the data.
+Route::post('/contract', [files_requestController::class, 'store']);
+
 // document request management
 Route::get('/document-request', [files_requestController::class, 'document_table']);
 
-Route::view('legalcontract', 'legalcontract')->name('legalcontract');
-Route::view('reports', 'reports')->name('reports');
+// download the document
+Route::get('/assets/{id}/{file_name}', [files_requestController::class, 'downloadFile']);
+
+// test
+Route::get('/test', [files_requestController::class, 'test']);
