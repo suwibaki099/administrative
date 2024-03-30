@@ -53,15 +53,21 @@
     }
 
     // get the department name
-    foreach ($files as $file) {
-        $department = $file->department;
-        break;
-    }
+      if($files){
+          $department = "No Contract found";
+        }
+      foreach ($files as $file) {
+          if ($file) {
+            $department = $file->department;
+            break;
+          } 
+        }
+        
 @endphp
 
 @extends('layouts.master')
 
-@section('title', $department . ' - File Details')
+@section('title', $department . ' - Files')
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/animate.css') }}">
@@ -72,7 +78,7 @@
 @endsection
 
 @section('breadcrumb-title')
-<h3>{{ $department  }} - Files </h3>
+<h3>{{ $department }} - Files </h3>
 @endsection
 
 @section('breadcrumb-items')
@@ -116,6 +122,9 @@
                 <li>
                   <div class="btn btn-primary"><i data-feather="folder"></i>Files</div>
                 </li>
+                <li>
+                  <a href="/archive"><div class="btn btn-light"><i data-feather="archive"></i>archive</div></a>
+                </li>
               </ul>
             </div>
           </div>
@@ -156,7 +165,7 @@
                          <button class="fa fa-ellipsis-v f-14 ellips btn-round remove" data-bs-toggle="dropdown" type="button"></button>
                          <ul class="dropdown-menu">
                           <li><a class="dropdown-item color" href="#"><i class="fa fa-send-o (alias) hov"></i></a></li>
-                          <li><a class="dropdown-item" href="#"><i class="fa fa-file-archive-o hov"></i></a></li>
+                          <li><a class="dropdown-item" href="/archive/{{$file->id}}"><i class="fa fa-file-archive-o hov"></i></a></li>
                         </ul>
                     </div>
                   <div class="file-bottom">

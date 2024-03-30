@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Archive;
 use Carbon\Carbon;
 use App\Models\contract;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Redirect;
 use PhpOffice\PhpWord\TemplateProcessor;
+use App\Models\Contract_request;
 
 class files_requestController extends Controller
 {
@@ -18,10 +20,23 @@ class files_requestController extends Controller
     {
         $document_counts = files_request::all()->count();
         $contract_counts = contract::all()->count();
+        $request_count = Contract_request::all()->count();
+
+        $pending = Contract_request::where('status', 'pending')->get();
+        $approve = Contract_request::where('status', 'approve')->get();
+        $rejected = Contract_request::where('status', 'rejected')->get();
+
+        $pending_count = $pending->count();
+        $approve_count = $pending->count();
+        $rejected_count = $pending->count();
 
         return view('index', [
             'documents' => $document_counts,
-            'contract' => $contract_counts
+            'contract' => $contract_counts,
+            'request' => $request_count,
+            'pending' => $pending_count,
+            'approve' => $approve_count,
+            'rejected' => $rejected_count
         ]);
     }
 
@@ -59,7 +74,9 @@ class files_requestController extends Controller
     // show contract table
     public function show_contract()
     {
-        return view('legalcontract');
+        return view('legalcontract', [
+            'request' => Contract_request::all()
+        ]);
     }
 
     // show document table
@@ -132,13 +149,13 @@ class files_requestController extends Controller
                     'relative_time' => time()
                 ]
             );
-            return redirect('/document-management')->with('success', 'Contract  has been created!');
+            return redirect('/document-management')->with('success', 'Contract has been created!');
         }
 
         return redirect('/document-management')->with('error', 'field is empty or department selected is None!');
     }
 
-    // download the file or open from public storage
+    // download the file or open from public storage and update the relative_time
     public function storageDownloadFile($file_name)
     {
         $file = files_request::where('file', 'upload/' . $file_name)->first();
@@ -158,10 +175,72 @@ class files_requestController extends Controller
         return redirect('/assets/contract/' . $file_name);
     }
 
+    // archive the documment
+    public function archiveDocument($id)
+    {
+        $record = files_request::find($id);
+
+        // store the data to archive table
+        Archive::create(
+            [
+                'department' => $record->department,
+                'file' => $record->file,
+                'extension' => $record->extension,
+                'name' => $record->name,
+                'size' => $record->size,
+                'relative_time' => $record->relative_time
+            ]
+        );
+
+        if ($record) {
+            // Delete the record from files_request
+            $record->delete();
+        }
+
+        return redirect(
+            'archive'
+        )->with('success', 'Archive has been created!');
+    }
+
+    // search archive or show archive
+    public function searchArchive()
+    {
+        return view(
+            "archive",
+            [
+                'files' => Archive::latest()->filter(request(['search']))->get()
+            ]
+        );
+    }
+
+    // un-archive the documents
+    public function un_archive($id)
+    {
+        $record = Archive::find($id);
+
+        // store the data to archive table
+        files_request::create(
+            [
+                'department' => $record->department,
+                'file' => $record->file,
+                'extension' => $record->extension,
+                'name' => $record->name,
+                'size' => $record->size,
+                'relative_time' => $record->relative_time
+            ]
+        );
+
+        if ($record) {
+            // Delete the record from archive
+            $record->delete();
+        }
+
+        return redirect('archive')->with('success', 'Unarchive Successfully!');
+    }
+
     // test
     public function test()
     {
-
         return 'done!';
     }
 }

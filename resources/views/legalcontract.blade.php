@@ -1,3 +1,50 @@
+@php
+    function time2str($ts)
+    {
+        if(!ctype_digit($ts))
+            $ts = strtotime($ts);
+
+        $diff = time() - $ts;
+        if($diff == 0)
+            return 'now';
+        elseif($diff > 0)
+        {
+            $day_diff = floor($diff / 86400);
+            if($day_diff == 0)
+            {
+                if($diff < 60) return 'just now';
+                if($diff < 120) return '1 minute ago';
+                if($diff < 3600) return floor($diff / 60) . ' minutes ago';
+                if($diff < 7200) return '1 hour ago';
+                if($diff < 86400) return floor($diff / 3600) . ' hours ago';
+            }
+            if($day_diff == 1) return 'Yesterday';
+            if($day_diff < 7) return $day_diff . ' days ago';
+            if($day_diff < 31) return ceil($day_diff / 7) . ' weeks ago';
+            if($day_diff < 60) return 'last month';
+            return date('F Y', $ts);
+        }
+        else
+        {
+            $diff = abs($diff);
+            $day_diff = floor($diff / 86400);
+            if($day_diff == 0)
+            {
+                if($diff < 120) return 'in a minute';
+                if($diff < 3600) return 'in ' . floor($diff / 60) . ' minutes';
+                if($diff < 7200) return 'in an hour';
+                if($diff < 86400) return 'in ' . floor($diff / 3600) . ' hours';
+            }
+            if($day_diff == 1) return 'Tomorrow';
+            if($day_diff < 4) return date('l', $ts);
+            if($day_diff < 7 + (7 - date('w'))) return 'next week';
+            if(ceil($day_diff / 7) < 4) return 'in ' . ceil($day_diff / 7) . ' weeks';
+            if(date('n', $ts) == date('n') + 1) return 'next month';
+            return date('F Y', $ts);
+        }
+    }
+@endphp
+
 @extends('layouts.master')
 
 @section('title', 'Contract Request')
@@ -74,70 +121,47 @@ textarea::-webkit-scrollbar{
             </div>
             </div>
         <div class="card-body">
-            <div class="table">
+            <div class="table" >
                 <table class="display" id="basic-6">
                     <thead>
                         <tr>
-                            <th rowspan="2">Name</th>
-                            <th colspan="2">HR Information</th>
-                            <th colspan="3">Contact</th>
-                        </tr>
-                        <tr>
-                            <th>Position</th>
-                            <th>Salary</th>
-                            <th>Office</th>
-                            <th>CV</th>
                             <th>Status</th>
-                            <th>E-mail</th>
-                            <th>Action</th>
+                            <th>Department</th>
+                            <th>Name</th>
+                            <th>Time</th>
+                            <th>Contract_name</th>
+                            <th>Content</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($request as $data)
                         <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>$320,800</td>
-                            <td>Edinburgh</td>
-                            <td class="action"> <a class="pdf" href="sample.pdf') }}" target="_blank"><i
-                                        class="icofont icofont-file-pdf"></i></a></td>
-                            <td> <span class="badge rounded-pill badge-success">hired</span></td>
-                            <td>t.nixon@datatables.net</td>
                             <td>
-                                <ul class="action">
-                                    <li class="edit"> <a href="#"><i class="icon-pencil-alt"></i></a>
-                                    </li>
-                                    <li class="delete"><a href="#"><i class="icon-trash"></i></a></li>
-                                </ul>
+                                @if ($data->status == 'pending')
+                                    <span class="badge rounded-pill badge-warning p-2">Pending</span>
+                                @elseif($data->status == 'approve')
+                                    <span class="badge rounded-pill badge-success p-2">Approve</span>
+                                @else
+                                    <span class="badge rounded-pill badge-danger p-2">Rejected</span>
+                                @endif
                             </td>
+                            <td>{{$data->department}}</td>
+                            <td>{{$data->name}}</td>
+                            <td style="color: green;">{{time2str($data->timestamp)}}</td>
+                            <td>{{$data->contract_name}}</td>
+                            <td><textarea disabled style="padding: 5px;" cols="20" rows="1">{{$data->content}}</textarea></td>
+                            
                         </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>$170,750</td>
-                            <td>Tokyo</td>
-                            <td class="action"> <a class="pdf" href="{{ asset('assets/pdf/sample.pdf') }}"
-                                    target="_blank"><i class="icofont icofont-file-pdf"> </i></a></td>
-                            <td> <span class="badge rounded-pill badge-danger">Pending</span></td>
-                            <td>g.winters@datatables.net</td>
-                            <td>
-                                <ul class="action">
-                                    <li class="edit"> <a href="#"><i class="icon-pencil-alt"></i></a>
-                                    </li>
-                                    <li class="delete"><a href="#"><i class="icon-trash"></i></a></li>
-                                </ul>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>Department</th>
                             <th>Name</th>
-                            <th>Position</th>
-                            <th>Salary</th>
-                            <th>Office</th>
-                            <th>CV </th>
+                            <th>Time</th>
                             <th>Status</th>
-                            <th>E-mail</th>
-                            <th>Action</th>
+                            <th>Contract_name</th>
+                            <th>Content</th>
                         </tr>
                     </tfoot>
                 </table>

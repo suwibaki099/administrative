@@ -119,10 +119,13 @@
           <div class="card-body">
             <ul>
               <li>
-                <div class="btn btn-primary"><i data-feather="folder"></i>All </div>
+                <a href="/document-management"><div class="btn btn-primary"><i data-feather="folder"></i>All </div></a>
               </li>
               <li>
                 <a href="/files/Contract"><div class="btn btn-light"><i data-feather="folder"></i>Contract</div></a>
+              </li>
+              <li>
+                <a href="/archive"><div class="btn btn-light"><i data-feather="archive"></i>archive</div></a>
               </li>
             </ul>
           </div>
@@ -135,6 +138,7 @@
           <div class="card-header">
             <div class="media">
               <form class="form-inline" action="/document-management/" method="get">
+                @csrf
                 <div class="form-group mb-0"> <i class="fa fa-search"></i>
                   <input class="form-control-plaintext" name="search" type="text" placeholder="Search...">
                 </div>
@@ -200,8 +204,8 @@
                   </a>
                        <button class="fa fa-ellipsis-v f-14 ellips btn-round remove" data-bs-toggle="dropdown" type="button"></button>
                        <ul class="dropdown-menu">
-                        <li><a class="dropdown-item color" href="/test"><i class="fa fa-send-o (alias) hov"></i></a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-file-archive-o hov"></i></a></li>
+                        <li><a class="dropdown-item color" href="/test" data-bs-toggle="tooltip" data-bs-placement="top" title="Send to.."><i class="fa fa-send-o (alias) hov"></i></a></li>
+                        <li><a class="dropdown-item" href="/archive/{{$file->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Archive"><i class="fa fa-file-archive-o hov"></i></a></li>
                       </ul>
                   </div>
                 <div class="file-bottom">

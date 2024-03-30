@@ -52,13 +52,6 @@
                 <li><a href="/document-request">Document Request</a></li>
             </ul>
             </li>
-          <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="{{ route('Reports')}}">
-              <svg class="stroke-icon">
-                <use href="{{ asset('assets/svg/icon-sprite.svg#stroke-form') }}"></use>
-              </svg>
-              <svg class="fill-icon">
-                <use href="{{ asset('assets/svg/icon-sprite.svg#fill-form') }}"></use>
-              </svg><span>Reports </span></a></li>
       </div>
     </nav>
   </div>

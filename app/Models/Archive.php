@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class files_request extends Model
+class Archive extends Model
 {
     use HasFactory;
 
@@ -20,9 +20,6 @@ class files_request extends Model
             $query->where('department', 'like', '%' . request('search') . '%')
                 ->orWhere('name', 'like', '%' . request('search') . '%')
                 ->orWhere('extension', 'like', '%' . request('search') . '%');
-        } else if ($filters[0] ?? false) {
-            $query->where('department', 'like', '%' . $filters[0] . '%')
-                ->orWhere('name', 'like', '%' . $filters[0] . '%');
         }
     }
 }

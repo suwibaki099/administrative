@@ -30,39 +30,29 @@
           <div class="notification-box">
             <svg>
               <use href="{{ asset('assets/svg/icon-sprite.svg#notification') }}"></use>
-            </svg><span class="badge rounded-pill badge-secondary">4 </span>
+            </svg>
           </div>
           <div class="onhover-show-div notification-dropdown">
             <h6 class="f-18 mb-0 dropdown-title">Notitications </h6>
             <ul>
-              <li class="b-l-primary border-4">
-                <p>Maebelyn Upload Documents <span class="font-danger">11 min.</span></p>
-              </li>
               <li class="b-l-success border-4">
                 <p>Em-Jay Request approval<span class="font-success">1 hr</span></p>
               </li>
-              <li class="b-l-secondary border-4">
-                <p>Ronald Edit<span class="font-secondary">3 hr</span></p>
-              </li>
-              <li class="b-l-warning border-4">
-                <p>Delivery Complete<span class="font-warning">6 hr</span></p>
-              </li>
-              <li><a class="f-w-700" href="#">Check all</a></li>
             </ul>
           </div>
         </li>
         <li class="profile-nav onhover-dropdown pe-0 py-0">
           <div class="media profile-media"><img class="b-r-10" src="{{ asset('assets/images/dashboard/profile.png') }}" alt="">
-            <div class="media-body"><span>Emay Walter</span>
-              <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
+            <div class="media-body"><span>{{auth()->user()->name}}</span>
+              <p class="mb-0 font-roboto">{{auth()->user()->role}} <i class="middle fa fa-angle-down"></i></p>
             </div>
           </div>
           <ul class="profile-dropdown onhover-show-div">
-            <li><a href="#"><i data-feather="user"></i><span>Account </span></a></li>
-            <li><a href="#"><i data-feather="mail"></i><span>Inbox</span></a></li>
-            <li><a href="#"><i data-feather="file-text"></i><span>Taskboard</span></a></li>
-            <li><a href="#"><i data-feather="settings"></i><span>Settings</span></a></li>
-            <li><a href="#"><i data-feather="log-in"> </i><span>Log in</span></a></li>
+            <li><a href="#"><i data-feather="user"></i><span>Account</span></a></li>
+            <li>
+              <a href="/logout"><i data-feather="log-out"> 
+                </i><span>Log out</span></a>
+            </li>
           </ul>
         </li>
       </ul>

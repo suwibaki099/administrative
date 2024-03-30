@@ -19,7 +19,10 @@
 
 
 @section('content')
-
+@if (session()->has('message'))
+         <div x-data="{show: true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="fixed top-0 left-1/2 transform -translate-x-1/2 alert alert-success dark alert-dismissible fade show" role="alert">{{session('message')}}
+         </div>
+    @endif
 <div class="container-fluid">
 	<div class="row widget-grid">
 		<div class="col-xxl-4 col-sm-6 box-col-6">
@@ -28,8 +31,8 @@
 					<div class="media">
 						<div class="media-body">
 							<div class="greeting-user">
-								<h4 class="f-w-600">Welcome to RKIVE</h4>
-								<p>Here whats happing in your account today</p>
+								<h4 class="f-w-600">Welcome to RKIVE </h4>
+								<p>{{auth()->user()->name}}, Here whats happing in your account today</p>
 								<div class="whatsnew-btn"><a class="btn btn-outline-white">Whats New !</a></div>
 							</div>
 						</div>
@@ -127,7 +130,7 @@
 									</div>
 								</div>
 								<div>
-									<h4>7000</h4><span class="f-light">Rejected</span>
+									<h4>{{$approve}}</h4><span class="f-light">Rejected</span>
 								</div>
 							</div>
 							<div class="font-warning f-w-500"><i class="icon-arrow-down icon-rotate me-1"></i><span>-20%</span></div>
@@ -148,7 +151,7 @@
 										</div>
 									</div>
 									<div>
-										<h4>5700</h4><span class="f-light">Approved</span>
+										<h4>{{$approve}}</h4><span class="f-light">Approved</span>
 									</div>
 								</div>
 								<div class="font-success f-w-500"><i class="icon-arrow-up icon-rotate me-1"></i><span>+70%</span></div>
@@ -164,7 +167,7 @@
 					<div class="card widget-1 widget-with-chart">
 						<div class="card-body">
 							<div>
-								<h4 class="mb-1">1,80k</h4><span class="f-light">Request </span>
+								<h4 class="mb-1">{{$request}}</h4><span class="f-light">Request </span>
 							</div>
 							<div class="order-chart">
 								<div id="orderchart"></div>
@@ -176,7 +179,7 @@
 					<div class="card widget-1 widget-with-chart">
 						<div class="card-body">
 							<div>
-								<h4 class="mb-1">6,90k</h4><span class="f-light">Pending</span>
+								<h4 class="mb-1">{{$pending}}</h4><span class="f-light">Pending</span>
 							</div>
 							<div class="profit-chart">
 								<div id="profitchart"></div>

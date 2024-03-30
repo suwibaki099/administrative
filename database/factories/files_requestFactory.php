@@ -17,7 +17,7 @@ class files_requestFactory extends Factory
     public function definition(): array
     {
         $extension = ['pdf', 'docx', 'txt', 'xls'];
-        $size = ['3.0 mb', '400 mb', '10.5 mb', '1.3 kb'];
+        $size = ['21350', '21350', '21350', '21350'];
         $rand_department = ['Logistic', 'Finance', 'HR', 'Administrative'];
         $random_extension = $extension[random_int(0, 3)];
 
