@@ -12,31 +12,35 @@ use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Redirect;
 use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\Contract_request;
+use App\Models\Document_request;
 
 class files_requestController extends Controller
 {
     // show the reports
     public function index()
     {
+        // contract request counts
         $document_counts = files_request::all()->count();
         $contract_counts = contract::all()->count();
         $request_count = Contract_request::all()->count();
 
-        $pending = Contract_request::where('status', 'pending')->get();
-        $approve = Contract_request::where('status', 'approve')->get();
-        $rejected = Contract_request::where('status', 'rejected')->get();
+        $pending_count = Contract_request::where('status', 'pending')->get()->count();
+        $approve_count = Contract_request::where('status', 'approve')->get()->count();
+        $rejected_count = Contract_request::where('status', 'rejected')->get()->count();
+        // end of document count
 
-        $pending_count = $pending->count();
-        $approve_count = $pending->count();
-        $rejected_count = $pending->count();
+        // document request counts
+        $pending_document = Document_request::where('status', 'pending')->get()->count();
+        $approve_document = Document_request::where('status', 'approve')->get()->count();
+        $rejected_document = Document_request::where('status', 'rejected')->get()->count();
 
         return view('index', [
             'documents' => $document_counts,
             'contract' => $contract_counts,
             'request' => $request_count,
-            'pending' => $pending_count,
-            'approve' => $approve_count,
-            'rejected' => $rejected_count
+            'pending' => $pending_count + $pending_document,
+            'approve' => $approve_count + $approve_document,
+            'rejected' => $rejected_count + $rejected_document
         ]);
     }
 
@@ -82,7 +86,9 @@ class files_requestController extends Controller
     // show document table
     public function document_table()
     {
-        return view('document-request');
+        return view('document-request', [
+            'request' => Document_request::all()
+        ]);
     }
 
     // store the new contract to database

@@ -130,7 +130,7 @@
 									</div>
 								</div>
 								<div>
-									<h4>{{$approve}}</h4><span class="f-light">Rejected</span>
+									<h4>{{$rejected}}</h4><span class="f-light">Rejected</span>
 								</div>
 							</div>
 							<div class="font-warning f-w-500"><i class="icon-arrow-down icon-rotate me-1"></i><span>-20%</span></div>

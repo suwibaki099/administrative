@@ -149,8 +149,7 @@ textarea::-webkit-scrollbar{
                             <td>{{$data->name}}</td>
                             <td style="color: green;">{{time2str($data->timestamp)}}</td>
                             <td>{{$data->contract_name}}</td>
-                            <td><textarea disabled style="padding: 5px;" cols="20" rows="1">{{$data->content}}</textarea></td>
-                            
+                            <td><textarea class="resize" disabled style="padding: 5px;" cols="20" rows="1">{{$data->content}}</textarea></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -261,7 +260,7 @@ textarea::-webkit-scrollbar{
                     <div class="col-12">
                         <div class="wrapper mb-2">
                             <label for="title" class="col-form-label text-md-right">Content</label>
-                            <textarea name="content" class="form-control" id="content" placeholder="Type something here..." required=""></textarea>
+                            <textarea name="content" class="form-control unsize" id="content" placeholder="Type something here..." required=""></textarea>
                             <div class="invalid-feedback">Please input input the content.</div>
                             <div class="valid-feedback">Looks good!</div>
                         </div>

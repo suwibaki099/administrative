@@ -1,3 +1,49 @@
+@php
+	function time2str($ts)
+    {
+        if(!ctype_digit($ts))
+            $ts = strtotime($ts);
+
+        $diff = time() - $ts;
+        if($diff == 0)
+            return 'now';
+        elseif($diff > 0)
+        {
+            $day_diff = floor($diff / 86400);
+            if($day_diff == 0)
+            {
+                if($diff < 60) return 'just now';
+                if($diff < 120) return '1 minute ago';
+                if($diff < 3600) return floor($diff / 60) . ' minutes ago';
+                if($diff < 7200) return '1 hour ago';
+                if($diff < 86400) return floor($diff / 3600) . ' hours ago';
+            }
+            if($day_diff == 1) return 'Yesterday';
+            if($day_diff < 7) return $day_diff . ' days ago';
+            if($day_diff < 31) return ceil($day_diff / 7) . ' weeks ago';
+            if($day_diff < 60) return 'last month';
+            return date('F Y', $ts);
+        }
+        else
+        {
+            $diff = abs($diff);
+            $day_diff = floor($diff / 86400);
+            if($day_diff == 0)
+            {
+                if($diff < 120) return 'in a minute';
+                if($diff < 3600) return 'in ' . floor($diff / 60) . ' minutes';
+                if($diff < 7200) return 'in an hour';
+                if($diff < 86400) return 'in ' . floor($diff / 3600) . ' hours';
+            }
+            if($day_diff == 1) return 'Tomorrow';
+            if($day_diff < 4) return date('l', $ts);
+            if($day_diff < 7 + (7 - date('w'))) return 'next week';
+            if(ceil($day_diff / 7) < 4) return 'in ' . ceil($day_diff / 7) . ' weeks';
+            if(date('n', $ts) == date('n') + 1) return 'next month';
+            return date('F Y', $ts);
+        }
+    }
+@endphp
 @extends('layouts.master')
 
 @section('title', 'Document Request')
@@ -30,56 +76,42 @@
 						<table class="display" id="export-button">
 							<thead>
 								<tr>
+									<th>Status</th>
+									<th>Department</th>
 									<th>Name</th>
-									<th>Position</th>
-									<th>Office</th>
-									<th>Age</th>
-									<th>Start date</th>
-									<th>Salary</th>
+									<th>Timestamp</th>
+									<th>Document_name</th>
+									<th>Reason</th>
 								</tr>
 							</thead>
 							<tbody>
+								@foreach ($request as $data)
 								<tr>
-									<td>Tiger Nixon</td>
-									<td>System Architect</td>
-									<td>Edinburgh</td>
-									<td>61</td>
-									<td>2011/04/25</td>
-									<td>$320,800</td>
+									<td>
+										@if ($data->status == 'pending')
+											<span class="badge rounded-pill badge-warning p-2">Pending</span>
+										@elseif($data->status == 'approve')
+											<span class="badge rounded-pill badge-success p-2">Approve</span>
+										@else
+											<span class="badge rounded-pill badge-danger p-2">Rejected</span>
+										@endif
+									</td>
+									<td>{{$data->department}}</td>
+									<td>{{$data->name}}</td>
+									<td style="color: green;">{{time2str($data->timestamp)}}</td>
+									<td>{{$data->document_name}}</td>
+									<td><textarea disabled style="padding: 5px;" cols="20" rows="1">{{$data->reason}}</textarea></td>
 								</tr>
-								<tr>
-									<td>Garrett Winters</td>
-									<td>Accountant</td>
-									<td>Tokyo</td>
-									<td>63</td>
-									<td>2011/07/25</td>
-									<td>$170,750</td>
-								</tr>
-								<tr>
-									<td>Ashton Cox</td>
-									<td>Junior Technical Author</td>
-									<td>San Francisco</td>
-									<td>66</td>
-									<td>2009/01/12</td>
-									<td>$86,000</td>
-								</tr>
-								<tr>
-									<td>Cedric Kelly</td>
-									<td>Senior Javascript Developer</td>
-									<td>Edinburgh</td>
-									<td>22</td>
-									<td>2012/03/29</td>
-									<td>$433,060</td>
-								</tr>
+								@endforeach
 							</tbody>
 							<tfoot>
 								<tr>
+									<th>Status</th>
+									<th>Department</th>
 									<th>Name</th>
-									<th>Position</th>
-									<th>Office</th>
-									<th>Age</th>
-									<th>Start date</th>
-									<th>Salary</th>
+									<th>Timestamp</th>
+									<th>Document_name</th>
+									<th>Reason</th>
 								</tr>
 							</tfoot>
 						</table>

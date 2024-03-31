@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Contract_request;
+use App\Models\Document_request;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,11 +18,31 @@ use Illuminate\Support\Facades\Route;
 
 // api for document request
 Route::get('/docu_request', function (Request $request_document) {
+
+    if ($request_document->reason && $request_document->department && $request_document->name && $request_document->document_name) {
+
+        //create a table in database
+        Document_request::create([
+            "department" => $request_document->department,
+            "name" => $request_document->name,
+            "timestamp" => time(),
+            "status" => 'pending',
+            "document_name" => $request_document->document_name,
+            "reason" => $request_document->reason
+        ]);
+
+        // json feedback
+        return response()->json([
+            "department" => $request_document->department,
+            "name" => $request_document->name,
+            "timestamp" => time(),
+            "reason" => $request_document->reason,
+            "document_name" => $request_document->document_name
+        ]);
+    }
+
     return response()->json([
-        "department" => $request_document->department,
-        "name" => $request_document->name,
-        "timestamp" => time(),
-        "document_name" => $request_document->document_name
+        "message" => 'Error!',
     ]);
 });
 
@@ -29,6 +50,7 @@ Route::get('/docu_request', function (Request $request_document) {
 Route::get('/contract_request', function (Request $request_contract) {
 
     if ($request_contract->content && $request_contract->department && $request_contract->name && $request_contract->contract_name) {
+
         //create a table in database
         Contract_request::create([
             "department" => $request_contract->department,
@@ -39,6 +61,7 @@ Route::get('/contract_request', function (Request $request_contract) {
             "content" => $request_contract->content
         ]);
 
+        // json feedback
         return response()->json([
             "department" => $request_contract->department,
             "name" => $request_contract->name,
