@@ -82,6 +82,7 @@
 									<th>Timestamp</th>
 									<th>Document_name</th>
 									<th>Reason</th>
+									<th>Message</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -100,7 +101,8 @@
 									<td>{{$data->name}}</td>
 									<td style="color: green;">{{time2str($data->timestamp)}}</td>
 									<td>{{$data->document_name}}</td>
-									<td><textarea disabled style="padding: 5px;" cols="20" rows="1">{{$data->reason}}</textarea></td>
+									<td><textarea disabled style="padding: 5px; color: red;" cols="20" rows="1">{{auth()->user()->role == 'Admin' ? $data->reason : 'Unauthorized'}}</textarea></td>
+									<td><textarea disabled style="padding: 5px;" cols="20" rows="1">{{$data->message}}</textarea></td>
 								</tr>
 								@endforeach
 							</tbody>
@@ -112,6 +114,7 @@
 									<th>Timestamp</th>
 									<th>Document_name</th>
 									<th>Reason</th>
+									<th>Message</th>
 								</tr>
 							</tfoot>
 						</table>

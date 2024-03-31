@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('contract_name');
             $table->text('content');
+            $table->text('message')->nullable();
             $table->timestamps();
         });
     }

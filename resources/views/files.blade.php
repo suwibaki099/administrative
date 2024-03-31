@@ -150,7 +150,7 @@
                 @foreach ($files as $file)
                 <li class="file-box index">
                   <div class="file-top"> 
-                    <a href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
+                    <a @if(auth()->user()->role == 'Admin') href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank" @else data-bs-toggle="modal" data-bs-target="#accessDenied" type="button" @endif>
                         @if($file->extension == 'pdf')
                             <i class="fa fa-file-pdf-o txt-secondary"></i>
                         @elseif($file->extension == 'doc' || $file->extension == 'docx')
@@ -222,6 +222,18 @@
               </div>
             </div>
     {{-- end of modal --}}
+    {{-- modal for access dinied --}}
+<div class="modal fade" id="accessDenied" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+          <h2 style="color: red;"><center>Unauthorized!</center></h2>
+          <h2><center>Access Denied</center></h2>
+      </div>
+    </div>
+  </div>
+</div>
+{{-- end of modal --}}
             </div>
           </div>
         </div>

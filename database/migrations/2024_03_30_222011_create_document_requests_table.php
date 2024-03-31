@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('document_name');
             $table->string('reason');
+            $table->text('message')->nullable();
             $table->timestamps();
         });
     }

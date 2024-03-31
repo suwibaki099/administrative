@@ -55,7 +55,7 @@
 @section('style')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/demo.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/intlTelInput.css')}}">
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/datatables.css') }}">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/datatables.css') }}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/dropzone.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/date-picker.css')}}">
 @endsection
@@ -131,6 +131,7 @@ textarea::-webkit-scrollbar{
                             <th>Time</th>
                             <th>Contract_name</th>
                             <th>Content</th>
+                            <th>Message</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,7 +150,8 @@ textarea::-webkit-scrollbar{
                             <td>{{$data->name}}</td>
                             <td style="color: green;">{{time2str($data->timestamp)}}</td>
                             <td>{{$data->contract_name}}</td>
-                            <td><textarea class="resize" disabled style="padding: 5px;" cols="20" rows="1">{{$data->content}}</textarea></td>
+                            <td><textarea class="resize" disabled @if(auth()->user()->role != 'Admin') style="padding: 5px; color: red;" @else style="padding: 5px;" @endif cols="20" rows="1">{{auth()->user()->role == 'Admin' ? $data->content : 'Unauthorized'}}</textarea></td>
+                            <td><textarea class="resize" disabled style="padding: 5px;" cols="20" rows="1">{{$data->message}}</textarea></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -161,6 +163,7 @@ textarea::-webkit-scrollbar{
                             <th>Status</th>
                             <th>Contract_name</th>
                             <th>Content</th>
+                            <th>Message</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -260,7 +263,7 @@ textarea::-webkit-scrollbar{
                     <div class="col-12">
                         <div class="wrapper mb-2">
                             <label for="title" class="col-form-label text-md-right">Content</label>
-                            <textarea name="content" class="form-control unsize" id="content" placeholder="Type something here..." required=""></textarea>
+                            <textarea name="content" class="form-control" id="content" placeholder="Type something here..." required=""></textarea>
                             <div class="invalid-feedback">Please input input the content.</div>
                             <div class="valid-feedback">Looks good!</div>
                         </div>

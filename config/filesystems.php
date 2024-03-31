@@ -39,7 +39,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
@@ -54,6 +54,14 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+        ],
+        // ftp for Group 49 supplier
+        'ftp_SUPPLIER_G49' => [
+            'driver' => 'ftp',
+            'host' => env('FTP_HOST_SUPPLIER_G49'),
+            'username' => env('FTP_USERNAME_SUPPLIER_G49'),
+            'password' => env('FTP_PASSWORD_SUPPLIER_G49'),
+            'root' => env('FTP_ROOT_SUPPLIER_G49') // for example: /public_html/images
         ],
 
     ],

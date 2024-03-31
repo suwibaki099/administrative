@@ -20,12 +20,12 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'John Caballes',
-            'email' => 'admin@example.com',
+            'email' => 'admin@gmail.com',
         ]);
         \App\Models\User::factory()->create([
             'name' => 'Bella Camz',
-            'email' => 'manager@example.com',
-            'role' => 'Office Manager'
+            'email' => 'manager@gmail.com',
+            'role' => 'Manager'
         ]);
 
         files_request::factory(4)->create();

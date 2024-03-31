@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Archive;
 use Carbon\Carbon;
+use App\Models\Archive;
 use App\Models\contract;
 use Illuminate\Http\Request;
 use App\Models\files_request;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\IOFactory;
-use Illuminate\Support\Facades\Redirect;
-use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\Contract_request;
 use App\Models\Document_request;
+use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redirect;
+use PhpOffice\PhpWord\TemplateProcessor;
+use Illuminate\Support\Facades\Storage;
 
 class files_requestController extends Controller
 {
@@ -109,7 +111,7 @@ class files_requestController extends Controller
         ]);
 
         // generate the contract
-        $dt = Carbon::now();
+        $dt = Carbon::now(); // get the current date and time
 
         $templateProcessor = new TemplateProcessor(asset('assets/contract-template/COE-Sample.docx'));
         $templateProcessor->setValue('title', $request->header);
@@ -137,7 +139,115 @@ class files_requestController extends Controller
             ]
         );
 
-        return redirect('/legal-contract')->with('success', 'Contract  has been created!');
+        return redirect('/legal-contract')->with('success', 'Upload has been successfully!');
+    }
+
+    // send the documents to another server using ftp
+    public function send(Request $request)
+    {
+        if ($request->department != 'None') {
+            $find_id = files_request::find($request->id); // initialize the id to find the correct document
+
+            if ($find_id->file) {
+
+                $file_name = $find_id->name;
+                // Define an array of characters to remove
+                $extension = array(".docx", ".pdf", ".doc", ".xls", ".xlsx", ".txt");
+                $clean_fileName = str_replace($extension, '', $file_name);
+
+                $update_status = Contract_request::where('contract_name', $clean_fileName)->first();
+                if ($update_status && $update_status->department == $request->department) {
+                    // find the storage path
+                    $file_local = Storage::path($find_id->file);
+                    Storage::disk('ftp_SUPPLIER_G49')->put($find_id->name, $file_local); //send the document to another server
+
+                    $update_status->status = 'approve';
+                    $update_status->save();
+
+                    return redirect('/document-management')->with('success', $file_name . ' has been successfully uploaded!');
+                }
+
+                $document_status_request_update = Document_request::where('document_name', $clean_fileName)->first();
+                if ($document_status_request_update && $document_status_request_update->department == $request->department) {
+                    // find the storage path
+                    $file_local = Storage::path($find_id->file);
+                    Storage::disk('ftp_SUPPLIER_G49')->put($find_id->name, $file_local); //send the document to another server
+
+                    $document_status_request_update->status = 'approve';
+                    $document_status_request_update->save();
+
+                    return redirect('/document-management')->with('success', $file_name . ' has been successfully uploaded!');
+                }
+                return redirect('/document-management')->with('error', 'The request does not exist!');
+            } else {
+
+
+                $file_name = $find_id->name;
+                // Define an array of characters to remove
+                $extension = array(".docx", ".pdf", ".doc", ".xls", ".xlsx", ".txt");
+                $clean_fileName = str_replace($extension, '', $file_name);
+
+                $update_status = Contract_request::where('contract_name', $clean_fileName)->first();
+                if ($update_status && $update_status->department == $request->department) {
+                    // find the asset/contract path
+                    $file_local = dirname('assets/contract/' . $find_id->name);
+                    Storage::disk('ftp_SUPPLIER_G49')->put($find_id->name, $file_local); //send the document to another server
+
+                    $update_status->status = 'approve';
+                    $update_status->save();
+
+                    return redirect('/document-management')->with('success', $file_name . ' has been successfully upload!');
+                }
+                $document_status_request_update = Document_request::where('document_name', $clean_fileName)->first();
+                if ($document_status_request_update && $document_status_request_update->department == $request->department) {
+                    // find the asset/contract path
+                    $file_local = dirname('assets/contract/' . $find_id->name);
+                    Storage::disk('ftp_SUPPLIER_G49')->put($find_id->name, $file_local); //send the document to another server
+
+                    $document_status_request_update->status = 'approve';
+                    $document_status_request_update->save();
+
+                    return redirect('/document-management')->with('success', $file_name . ' has been successfully uploaded!');
+                }
+                return redirect('/document-management')->with('error', 'The request does not exist!');
+            }
+        }
+
+        return redirect('/document-management')->with('error', 'field is empty or department selected is None!');
+    }
+
+    // reject the request 
+    public function rejected(Request $request)
+    {
+        if ($request->department != 'None') {
+            $find_id = files_request::find($request->id); // initialize the id to find the correct document
+
+            $file_name = $find_id->name;
+            // Define an array of characters to remove
+            $extension = array(".docx", ".pdf", ".doc", ".xls", ".xlsx", ".txt");
+            $clean_fileName = str_replace($extension, '', $file_name);
+
+            $update_status = Contract_request::where('contract_name', $clean_fileName)->first();
+            if ($update_status && $update_status->status != 'approve' && $update_status->department == $request->department) {
+
+                $update_status->status = 'rejected';
+                $update_status->message = $request->message;
+                $update_status->save();
+
+                return redirect('/document-management')->with('success', $file_name . ' has been successfully rejected!');
+            }
+            $document_status_request_update = Document_request::where('document_name', $clean_fileName)->first();
+            if ($document_status_request_update && $document_status_request_update->status != 'approve' && $document_status_request_update->department == $request->department) {
+
+                $document_status_request_update->status = 'rejected';
+                $document_status_request_update->message = $request->message;
+                $document_status_request_update->save();
+
+                return redirect('/document-management')->with('success', $file_name . ' has been successfully rejected!');
+            }
+            return redirect('/document-management')->with('error', 'The request does not exist or already approved!');
+        }
+        return redirect('/document-management')->with('error', 'field is empty or department selected is None!');
     }
 
     // upload file
@@ -171,7 +281,7 @@ class files_requestController extends Controller
         return redirect('/storage/upload/' . $file_name);
     }
 
-    // download the file or open it from public.
+    // download the file or open it from public and update the relative_time
     public function downloadFile($id, $file_name)
     {
         $file = files_request::where('id', $id)->first();

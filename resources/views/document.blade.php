@@ -98,6 +98,22 @@
     .hov:hover {
       color: #ff7569;
     }
+
+    .wrapper textarea {
+      resize: none;
+      width: 100%;
+      height: 59px;
+      padding: 15px;
+      outline: none;
+      font-size: 16px;
+      border-color: #bfbfbf;
+      border-radius: 5px;
+    }
+
+
+    textarea::-webkit-scrollbar{
+        width: 0px;
+    }
   </style>
   <div class="row">
         {{-- alerts --}}
@@ -190,7 +206,7 @@
               @foreach ($files as $file)
               <li class="file-box index">
                 <div class="file-top"> 
-                  <a href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank">  {{-- test --}}
+                  <a @if(auth()->user()->role == 'Admin') href="{{ $file->file ? asset($file->file) : asset('assets/'. $file->id .'/'. $file->name .'') }}" target="_blank" @else data-bs-toggle="modal" data-bs-target="#accessDenied" type="button" @endif> 
                       @if($file->extension == 'pdf')
                           <i class="fa fa-file-pdf-o txt-secondary"></i>
                       @elseif($file->extension == 'doc' || $file->extension == 'docx')
@@ -204,7 +220,7 @@
                   </a>
                        <button class="fa fa-ellipsis-v f-14 ellips btn-round remove" data-bs-toggle="dropdown" type="button"></button>
                        <ul class="dropdown-menu">
-                        <li><a class="dropdown-item color" href="/test" data-bs-toggle="tooltip" data-bs-placement="top" title="Send to.."><i class="fa fa-send-o (alias) hov"></i></a></li>
+                        <li><a class="dropdown-item color send" type="button" value="{{$file->id}}" onclick='getValue("{{$file->id}}");' data-bs-toggle="modal" data-bs-placement="top" title="Send to.."><i class="fa fa-send-o (alias) hov"></i></a></li>
                         <li><a class="dropdown-item" href="/archive/{{$file->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Archive"><i class="fa fa-file-archive-o hov"></i></a></li>
                       </ul>
                   </div>
@@ -256,13 +272,106 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm"><i data-feather="upload"></i> Upload</button>
                           </div>
-                          <!-- Button to submit the form -->
+                          <!-- Button to submit the form to create contract-->
                       </form>
                   </div>
                 </div>
               </div>
             </div>
     {{-- end of modal --}}
+
+    {{-- modal for sending documents --}}
+    <div class="modal fade" id="tooltipmodal2" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Send To...</h5>
+              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="stepwizard">
+                          <div class="stepwizard-row setup-panel">
+                            <div class="stepwizard-step">
+                              <a class="btn btn-primary" href="#step-1">Approve</a>
+                              <p class="text-success">Approve</p>
+                            </div>
+                            <div class="stepwizard-step">
+                              <a class="btn btn-light" href="#step-2">Rejected</a>
+                              <p class="text-danger">Rejected</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="setup-content" id="step-1">
+                          {{-- form for approval --}}
+                          <form action="/send" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="col-xs-12">
+                              <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="department" class="col-form-label text-md-right">Department</label>
+                                    <select class="form-select form-control-info-fill" name="department">
+                                      <option value="None">Select...</option>
+                                      <option value="Supplier-G49">Supplier-G49</option>
+                                    </select>
+                                    <textarea name="id" id="id2" class="d-none"></textarea>
+                                </div>
+                              </div>
+                            </div>
+                            <button class="btn btn-primary mt-4" type="submit">Send</button>
+                          </form>
+                            {{-- end of form --}}
+                          </div>
+                          <div class="setup-content" id="step-2">
+                            {{-- form for rejected --}}
+                          <form action="/rejected" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="col-xs-12">
+                              <div class="col-md-12">
+                                <div class="mb-3">
+                                  <label for="department" class="col-form-label text-md-right">Department</label>
+                                    <select class="form-select form-control-info-fill" name="department">
+                                      <option value="None">Select...</option>
+                                      <option value="Supplier-G49">Supplier-G49</option>
+                                    </select>
+                                    <textarea name="id" id="id" class="d-none"></textarea>
+                                </div>
+                                <div class="mb-3 wrapper">
+                                  <label class="control-label">Message</label>
+                                  <textarea name="message"></textarea>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Send</button>
+                              </div>
+                            </div>
+                          </form>
+                          {{-- end of form --}}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{{-- end of modal --}}
+{{-- modal for access dinied --}}
+<div class="modal fade" id="accessDenied" tabindex="-1" role="dialog" aria-labelledby="tooltipmodal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+          <h2 style="color: red;"><center>Unauthorized!</center></h2>
+          <h2><center>Access Denied</center></h2>
+      </div>
+    </div>
+  </div>
+</div>
+{{-- end of modal --}}
           </div>
         </div>
       </div>
@@ -280,4 +389,20 @@
 <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/icons/icons-notify.js')}}"></script>
 <script src="{{asset('assets/js/icons/icon-clipart.js')}}"></script>
+<script src="{{asset('assets/js/form-wizard/form-wizard-two.js')}}"></script>
+<script>
+    // textarea auto resize address
+    const address = document.querySelector("#message");
+    address.addEventListener("keyup", e =>{
+        let scHeight = e.target.scrollHeight;
+        address.style.height= "auto";
+        address.style.height= `${scHeight}px`;
+    });
+
+    function getValue(id){
+      $('#id2').text(id);
+      $('#id').text(id);
+      $('#tooltipmodal2').modal('show');
+    }
+</script>
 @endsection
